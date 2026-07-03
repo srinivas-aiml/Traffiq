@@ -1,5 +1,6 @@
 from fastapi import FastAPI 
 from pydantic import BaseModel 
+from app.routers.journey import router
 
 app = FastAPI() 
 class Traffic(BaseModel):
@@ -8,23 +9,8 @@ class Traffic(BaseModel):
     time : str 
 
 
-@app.post("/traffic")
-def create_traffic(request: Traffic):
-   return {"message": "Traffic data received", "request":request.source}
-
-
 @app.get("/")
-def get_func():
-    return {"Welcome to TrafficQ API"}
+def home():
+    return {"message": "Welcome to the Traffic API"}
 
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
-
-@app.post("/journey") 
-def create_journey(request: Traffic):
-    return {"message": "Recieved journey data", "source": request.source}
-
-@app.get("/traffic")
-def get_traffic():
-    return {"traffic": "Heavy", "estimated_time": "30 minutes"}
+app.include_router(router)
