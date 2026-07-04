@@ -1,11 +1,13 @@
 from fastapi import APIRouter 
+from app.models.models import Journey,Prediction
 
 router = APIRouter(prefix="/journey" , tags=["Journey"]) 
 
 @router.post("/")
-def create_journey():
+def create_journey(journey: Journey):
     return{
-        "message": "Journey created successfully"
+        "message": "Journey created successfully",
+        "data":journey
     }
 
 @router.get("/traffic")
