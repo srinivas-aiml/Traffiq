@@ -1,12 +1,12 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import './App.css'
+import JourneyPlanner from './components/journeyPlanar'
 
 function App(){
   return (
     <div>
-     <Navbar />
-     <Hero />
+    <JourneyPlanner />
     </div>
   )
 }
