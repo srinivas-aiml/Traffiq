@@ -1,32 +1,33 @@
 import { useState } from "react";
 
-
 function JourneyPlanner() {
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [prediction, setPrediction] = useState(null);
+  const [result, setResult] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const journey = {
+      source,
+      destination,
+      date,
+      time,
+    };
+
     try {
-      const response = await fetch("http://127.0.0.1:8001/journey", {
+      const response = await fetch("http://127.0.0.1:8000/journey", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          source,
-          destination,
-          date,
-          time,
-        }),
+        body: JSON.stringify(journey),
       });
 
       const data = await response.json();
-      setPrediction(data);
+      setResult(data);
     } catch (error) {
       console.error("Error:", error);
       alert("Unable to connect to the FastAPI server.");
@@ -34,62 +35,66 @@ function JourneyPlanner() {
   };
 
   return (
-    <div className="planner-container">
-      <h2>Journey Planner</h2>
+    <section id="planner" className="planner-section">
+      <div className="planner-card">
+        <h2>Journey Planner</h2>
 
-      <form onSubmit={handleSubmit}>
-        <label>📍 Source</label>
-        <input
-          type="text"
-          placeholder="Enter source"
-          value={source}
-          onChange={(e) => setSource(e.target.value)}
-          required
-        />
+        <form onSubmit={handleSubmit}>
+          <label>📍 Source</label>
+          <input
+            type="text"
+            placeholder="Enter source"
+            value={source}
+            onChange={(e) => setSource(e.target.value)}
+            required
+          />
 
-        <label>📍 Destination</label>
-        <input
-          type="text"
-          placeholder="Enter destination"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
-          required
-        />
+          <label>📍 Destination</label>
+          <input
+            type="text"
+            placeholder="Enter destination"
+            value={destination}
+            onChange={(e) => setDestination(e.target.value)}
+            required
+          />
 
-        <label>📅 Date</label>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
-        />
+          <label>📅 Date</label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+          />
 
-        <label>🕒 Time</label>
-        <input
-          type="time"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          required
-        />
+          <label>🕒 Time</label>
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            required
+          />
 
-        <button type="submit">Predict Traffic</button>
-      </form>
+          <button type="submit" className="predict-btn">
+            🚦 Predict Traffic
+          </button>
+        </form>
 
-      {prediction && (
-        <div className="result">
-          <h3>Traffic Prediction</h3>
+        {result && (
+          <div className="result-card">
+            <h3>Prediction Result</h3>
 
-          <p><strong>Traffic:</strong> {prediction.traffic}</p>
+            <p><strong>Traffic:</strong> {result.traffic}</p>
 
-          <p>
-            <strong>Estimated Time:</strong>{" "}
-            {prediction.estimated_time}
-          </p>
+            <p><strong>Estimated Time:</strong> {result.estimated_time}</p>
 
-          <p>{prediction.message}</p>
-        </div>
-      )}
-    </div>
+            <p>
+              <strong>Suggested Departure:</strong>{" "}
+              {result.suggested_departure}
+            </p>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
