@@ -1,106 +1,56 @@
+from sklearn.model_selection import train_test_split 
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier 
+from sklearn.preprocessing import LabelEncoder 
+import joblib
 
-df= pd.read_csv('datasets/traffic.csv')
-
-print("Shape:",df.shape)
-print("\nColumns:",df.columns)
-print("\nData Types:\n",df.dtypes)
-
-print("\nMissing Values:\n",df.isnull().sum()) 
-
-for col in df.select_dtypes(include=['number']).columns:
-    df[col] =df[col].fillna(df[col].mean())
-
-for col in df.select_dtypes(include=['object','string']).columns:
-    df[col] =df[col].fillna(df[col].mode().iloc[0])
+df = pd.read_csv('datasets/traffic_features.csv')
+print("shape:",df.shape)
+print(df.head())
+print(df.info())
 
 
-
-duplicates = df.duplicated().sum() 
-print("\nDuplicate Rows:",duplicates)
-
-
-
-if "Date" in df.columns:
-    df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
-
-if "Time" in df.columns:
-    df["Time"] = pd.to_datetime(df["Time"], errors="coerce")
-
-
-columns_to_remove = []
-
-for col in df.columns:
-    if "id" == col.lower() or col.lower() == "unnamed: 0":
-        columns_to_remove.append(col)
-
-df = df.drop(columns=columns_to_remove, errors="ignore")
-
-
-print("\nFinal Shape:", df.shape)
-
-print("\nMissing Values After Cleaning:")
 print(df.isnull().sum())
 
-print("\nData Types After Cleaning:")
 print(df.dtypes)
+le=LabelEncoder()
+df['TrafficSituation'] = le.fit_transform(df["TrafficSituation"])
+
+df= pd.get_dummies(
+    df, columns=[
+        "Area Name",
+        "Road/Intersection Name",
+        "Congestion Level",
+        "Weather Conditions",
+        "Roadwork and Construction Activity",
+        "TimeBlock",
+        "Month_Name"
+    ],dtype=int
+)
+X=df.drop(['TrafficSituation','Date'], axis=1)  # Replace 'target_column' with the actual name of your target column
+print(X.head)
+print(X.shape)
 
 
-df.to_csv("datasets/traffic_cleaned.csv", index=False)
-
-print("\nCleaned dataset saved as datasets/traffic_cleaned.csv")
-
-
-
-
-##feature Engineering
-df["Day_Number"] = df["Date"].dt.dayofweek
-
-
-df["Weekend"] = (df["Date"].dt.dayofweek >= 5).astype(int)
-
-
-df["Month"] = df["Date"].dt.month
-
-
-df["Month_Name"] = df["Date"].dt.month_name()
-
-
-df["Quarter"] = df["Date"].dt.quarter
-
-
-df["Year"] = df["Date"].dt.year
-
-
-df["Day"] = df["Date"].dt.day
-
-
-df["Week_Number"] = df["Date"].dt.isocalendar().week.astype(int)
-
-
-df["Is_Month_Start"] = df["Date"].dt.is_month_start.astype(int)
-
-
-df["Is_Month_End"] = df["Date"].dt.is_month_end.astype(int)
+y=df['TrafficSituation']
+print(y.head)
+print(y.shape)
 
 
 
-df.to_csv("datasets/traffic_features.csv", index=False)
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=42)
 
-print("Feature engineering completed successfully!")
-print("New dataset saved as: datasets/traffic_features.csv")
 
-print("\nNew Features Added:")
-print([
-    "Day_of_Week",
-    "Day_Number",
-    "Weekend",
-    "Month",
-    "Month_Name",
-    "Quarter",
-    "Year",
-    "Day",
-    "Week_Number",
-    "Is_Month_Start",
-    "Is_Month_End"
-])
+model=RandomForestClassifier(n_estimators=100,random_state=42) 
+
+model.fit(X_train,y_train)
+
+joblib.dump(model,"models/traffic_model.pkl")
+joblib.dump(le,"models/label_encoder.pkl")
+
+y_pred = model.predict(X_test)
+
+print("Predictions:")
+print(y_pred[:10])
+
+print("Model Saved Successfully")
