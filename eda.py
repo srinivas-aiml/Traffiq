@@ -46,9 +46,6 @@ model=RandomForestClassifier(n_estimators=100,random_state=42)
 
 model.fit(X_train,y_train)
 
-joblib.dump(model,"models/random_forest.pkl")
-joblib.dump(le,"models/label_encoder.pkl")
-
 y_pred = model.predict(X_test)
 
 
@@ -75,6 +72,8 @@ feature_importance = feature_importance.sort_values(
 
 print(feature_importance.head(10))
 
+feature_columns = X.columns.tolist() 
+joblib.dump(feature_columns, "app/ml/feature_columns.pkl")
 
 
 import pandas as pd

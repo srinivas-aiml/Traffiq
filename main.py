@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
+from app.routers.journey import router as prediction_router
 app = FastAPI()
 
 app.add_middleware(
@@ -28,3 +28,5 @@ def predict_traffic(journey: Journey):
         "estimated_time": "55 minutes",
         "message": f"Trip from {journey.source} to {journey.destination}"
     }
+
+app.include_router(prediction_router)
