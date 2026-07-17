@@ -1,24 +1,43 @@
 import { useState } from "react";
+import PredictionResult from "./PredictionResult";
 
 function JourneyPlanner() {
-  const [source, setSource] = useState("");
-  const [destination, setDestination] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+  const [journey, setJourney] = useState({
+    source: "",
+    destination: "",
+    date: "",
+    time: "",
+  });
+
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleChange = (e) => {
+    setJourney({
+      ...journey,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    const journey = {
-      source,
-      destination,
-      date,
-      time,
-    };
+  const predictTraffic = async () => {
+    setLoading(true);
+    setError("");
+    setResult(null);
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/journey", {
+
+    if (
+    !journey.source ||
+    !journey.destination ||
+    !journey.date ||
+    !journey.time
+) {
+    setError("Please fill all fields.");
+    return;
+}
+
+      const response = await fetch("http://127.0.0.1:8000/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,75 +45,67 @@ function JourneyPlanner() {
         body: JSON.stringify(journey),
       });
 
+      if (!response.ok) {
+        throw new Error("Server Error");
+      }
+
       const data = await response.json();
       setResult(data);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Unable to connect to the FastAPI server.");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <section id="planner" className="planner-section">
-      <div className="planner-card">
-        <h2>Journey Planner</h2>
+    <div>
+      <h2>Journey Planner</h2>
 
-        <form onSubmit={handleSubmit}>
-          <label>📍 Source</label>
-          <input
-            type="text"
-            placeholder="Enter source"
-            value={source}
-            onChange={(e) => setSource(e.target.value)}
-            required
-          />
+      <input
+        type="text"
+        name="source"
+        placeholder="Source"
+        value={journey.source}
+        onChange={handleChange}
+      />
 
-          <label>📍 Destination</label>
-          <input
-            type="text"
-            placeholder="Enter destination"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            required
-          />
+      <input
+        type="text"
+        name="destination"
+        placeholder="Destination"
+        value={journey.destination}
+        onChange={handleChange}
+      />
 
-          <label>📅 Date</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
+      <input
+        type="date"
+        name="date"
+        value={journey.date}
+        onChange={handleChange}
+      />
 
-          <label>🕒 Time</label>
-          <input
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            required
-          />
+      <input
+        type="time"
+        name="time"
+        value={journey.time}
+        onChange={handleChange}
+      />
 
-          <button type="submit" className="predict-btn">
-            🚦 Predict Traffic
-          </button>
-        </form>
+      <br /><br />
 
-        {result && (
-          <div className="result-card">
-            <h3>Prediction Result</h3>
+      <button onClick={predictTraffic} disabled={loading}>
+        {loading ? "Predicting..." : "Predict Traffic"}
+      </button>
 
-            <p><strong>Traffic:</strong> {result.traffic}</p>
+      {error && (
+        <p style={{ color: "red" }}>
+          {error}
+        </p>
+      )}
 
-            <p><strong>Estimated Time:</strong> {result.estimated_time}</p>
-
-            <p>
-              <strong>Suggested Departure:</strong>{" "}
-              {result.suggested_departure}
-            </p>
-          </div>
-        )}
-      </div>
-    </section>
+      <PredictionResult result={result} />
+    </div>
   );
 }
 

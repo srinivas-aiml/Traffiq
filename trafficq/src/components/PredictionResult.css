@@ -1,0 +1,32 @@
+.prediction-card {
+    width: 450px;
+    margin: 30px auto;
+    padding: 25px;
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.prediction-card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.result-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.result-item span {
+    font-weight: 500;
+}
+
+.result-item strong {
+    color: #1565c0;
+}

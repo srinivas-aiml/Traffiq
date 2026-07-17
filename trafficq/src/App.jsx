@@ -7,10 +7,9 @@ import Footer from './components/Footer'
 function App(){
   return (
     <div>
-      <Navbar />
-      <Hero />
+    
       <JourneyPlanner />
-      <Footer/>
+     
     </div>
   )
 }
