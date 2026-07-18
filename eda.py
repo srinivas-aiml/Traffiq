@@ -92,3 +92,10 @@ print("Accuracy:", accuracy_score(y_test, y_pred))
 print("Precision:", precision_score(y_test, y_pred, average="weighted"))
 print("Recall:", recall_score(y_test, y_pred, average="weighted"))
 print("F1 Score:", f1_score(y_test, y_pred, average="weighted"))
+
+
+
+model=joblib.load("app/ml/random_forest.pkl")
+print(model)
+
+print(X.columns.tolist())

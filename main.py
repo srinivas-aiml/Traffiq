@@ -1,15 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from app.routers.journey import router as prediction_router
+
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173"
-    ],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,12 +18,16 @@ class Journey(BaseModel):
     date: str
     time: str
 
-@app.post("/journey")
-def predict_traffic(journey: Journey):
+@app.get("/")
+def home():
+    return {"message": "TrafficQ API Running"}
+
+@app.post("/predict")
+def predict(journey: Journey):
+    # Replace this with your ML model later
     return {
         "traffic": "Heavy",
-        "estimated_time": "55 minutes",
-        "message": f"Trip from {journey.source} to {journey.destination}"
+        "travel_time": "45 mins",
+        "congestion_score": 87,
+        "departure_time": "08:10 AM"
     }
-
-app.include_router(prediction_router)

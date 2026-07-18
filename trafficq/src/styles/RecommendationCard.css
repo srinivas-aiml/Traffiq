@@ -1,0 +1,38 @@
+.recommendation-card{
+    width:500px;
+    margin:20px auto;
+    padding:20px;
+    border-radius:12px;
+    background:#f5fff5;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+    text-align:center;
+}
+
+.recommendation-card h2{
+    color:#1565c0;
+}
+
+.recommendation-card h3{
+    color:#d32f2f;
+}
+
+.recommendation-card p{
+    font-size:17px;
+}
+
+.recommendation-card{
+
+    width:450px;
+
+    background:#f8fff9;
+
+    border-left:8px solid green;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    box-shadow:0 6px 15px rgba(0,0,0,.15);
+
+}
+

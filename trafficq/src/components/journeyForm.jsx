@@ -1,5 +1,8 @@
 import { useState } from "react";
 import PredictionResult from "./PredictionResult";
+import AIDecisionCard from "./AIDecisionCard";
+import RecommedationCard from "./RecommendationCard";
+
 
 function JourneyPlanner() {
   const [journey, setJourney] = useState({
@@ -103,8 +106,16 @@ function JourneyPlanner() {
           {error}
         </p>
       )}
+      <div className="prediction-container">
 
-      <PredictionResult result={result} />
+     <AIDecisionCard result={result} />
+     {
+       result &&  <RecommedationCard traffic={result.traffic} />
+     }      
+
+      </div>
+
+      
     </div>
   );
 }
