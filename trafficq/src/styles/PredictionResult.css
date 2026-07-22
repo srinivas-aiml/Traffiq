@@ -1,32 +1,191 @@
-.prediction-card {
-    width: 450px;
-    margin: 30px auto;
-    padding: 25px;
-    border-radius: 12px;
-    background: white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+.prediction-card{
+
+    width:700px;
+
+    max-width:95%;
+
+    margin:40px auto;
+
+    background:#ffffff;
+
+    border-radius:15px;
+
+    padding:30px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
 }
 
-.prediction-card h2 {
-    text-align: center;
-    margin-bottom: 20px;
+.prediction-card h2{
+
+    text-align:center;
+
+    color:#1565c0;
+
+    margin-bottom:30px;
+
 }
 
-.result-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 0;
-    border-bottom: 1px solid #ddd;
+.result-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px 0;
+
+    border-bottom:1px solid #e5e5e5;
+
 }
 
-.result-item:last-child {
-    border-bottom: none;
+.label{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    font-weight:600;
+
 }
 
-.result-item span {
-    font-weight: 500;
+.icon{
+
+    font-size:22px;
+
+    color:#1976d2;
+
 }
 
-.result-item strong {
-    color: #1565c0;
+.result-item strong{
+
+    font-size:18px;
+
+}
+
+.status-box{
+
+    margin-top:25px;
+
+    background:#fff8e1;
+
+    border-left:6px solid #ffb300;
+
+    padding:20px;
+
+    border-radius:10px;
+
+}
+
+.status-box h3{
+
+    color:#ef6c00;
+
+    margin-bottom:10px;
+
+}
+
+.status-box p{
+
+    line-height:1.6;
+
+}
+
+.xai-box{
+
+    margin-top:25px;
+
+    background:#e3f2fd;
+
+    border-left:6px solid #1976d2;
+
+    padding:20px;
+
+    border-radius:10px;
+
+}
+
+.xai-box h3{
+
+    color:#1565c0;
+
+    margin-bottom:15px;
+
+}
+
+.xai-box ul{
+
+    padding-left:20px;
+
+}
+
+.xai-box li{
+
+    margin:10px 0;
+
+}
+
+.note{
+
+    margin-top:15px;
+
+    font-size:14px;
+
+    color:#555;
+
+    font-style:italic;
+
+}
+
+.status-success{
+
+    margin-top:25px;
+
+    background:#e8f5e9;
+
+    border-left:6px solid #43a047;
+
+    padding:20px;
+
+    border-radius:10px;
+
+    text-align:center;
+
+}
+
+.status-success h3{
+
+    color:#2e7d32;
+
+}
+
+.status-success p{
+
+    font-weight:bold;
+
+    color:#2e7d32;
+
+}
+
+@media(max-width:768px){
+
+.result-item{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:12px;
+
+}
+
+.prediction-card{
+
+padding:20px;
+
+}
+
 }

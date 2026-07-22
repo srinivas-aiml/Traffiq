@@ -1,4 +1,4 @@
-import "./AIDecisionCard.css";
+import "../styles/AIDecisionCard.css";
 
 import {
   FaTrafficLight,

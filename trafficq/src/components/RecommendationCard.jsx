@@ -1,4 +1,4 @@
-import "./RecommendationCard.css";
+import "../styles/RecommendationCard.css";
 
 function RecommendationCard({ traffic }) {
 
