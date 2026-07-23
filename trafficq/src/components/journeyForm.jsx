@@ -1,8 +1,15 @@
 import { useState } from "react";
-import PredictionResult from "./PredictionResult";
+import {
+  FaMapMarkerAlt,
+  FaCalendarAlt,
+  FaClock,
+  FaSpinner,
+  FaExclamationTriangle,
+  FaCheckCircle,
+  FaRobot,
+  FaArrowRight,
+} from "react-icons/fa";
 import AIDecisionCard from "./AIDecisionCard";
-import RecommedationCard from "./RecommendationCard";
-
 
 function JourneyPlanner() {
   const [journey, setJourney] = useState({
@@ -15,6 +22,7 @@ function JourneyPlanner() {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     setJourney({
@@ -23,100 +31,161 @@ function JourneyPlanner() {
     });
   };
 
-  const predictTraffic = async () => {
+  const predictTraffic = async (event) => {
+    event.preventDefault();
     setLoading(true);
     setError("");
+    setSuccessMessage("");
     setResult(null);
 
     try {
+      if (
+        !journey.source.trim() ||
+        !journey.destination.trim() ||
+        !journey.date ||
+        !journey.time
+      ) {
+        setError("Please complete all journey fields before predicting traffic.");
+        return;
+      }
 
-    if (
-    !journey.source ||
-    !journey.destination ||
-    !journey.date ||
-    !journey.time
-) {
-    setError("Please fill all fields.");
-    return;
-}
+      if (
+        journey.source.trim().toLowerCase() === journey.destination.trim().toLowerCase()
+      ) {
+        setError("Source and destination cannot be the same. Please enter different locations.");
+        return;
+      }
 
       const response = await fetch("http://127.0.0.1:8000/predict", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(journey),
+        body: JSON.stringify({
+          source: journey.source.trim(),
+          destination: journey.destination.trim(),
+          date: journey.date,
+          time: journey.time,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error("Server Error");
+        throw new Error("The prediction service is currently unavailable. Please try again.");
       }
 
       const data = await response.json();
       setResult(data);
+      setSuccessMessage("Prediction generated successfully. Your traffic guidance is ready.");
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Something went wrong while predicting traffic.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Journey Planner</h2>
+    <section className="planner-section" id="planner">
+      <div className="planner-shell">
+        <div className="planner-header">
+          <span className="planner-badge">
+            <FaRobot /> AI Journey Planner
+          </span>
+          <h2>Predict traffic before you leave</h2>
+          <p>
+            Enter your trip details and get a faster, clearer congestion forecast with
+            practical departure guidance.
+          </p>
+        </div>
 
-      <input
-        type="text"
-        name="source"
-        placeholder="Source"
-        value={journey.source}
-        onChange={handleChange}
-      />
+        <div className="planner-grid">
+          <form className="planner-card" onSubmit={predictTraffic}>
+            <div className="field-group">
+              <label htmlFor="source">
+                <FaMapMarkerAlt /> Source
+              </label>
+              <input
+                id="source"
+                type="text"
+                name="source"
+                placeholder="e.g. Ecity"
+                value={journey.source}
+                onChange={handleChange}
+              />
+            </div>
 
-      <input
-        type="text"
-        name="destination"
-        placeholder="Destination"
-        value={journey.destination}
-        onChange={handleChange}
-      />
+            <div className="field-group">
+              <label htmlFor="destination">
+                <FaMapMarkerAlt /> Destination
+              </label>
+              <input
+                id="destination"
+                type="text"
+                name="destination"
+                placeholder="e.g. Bellandur"
+                value={journey.destination}
+                onChange={handleChange}
+              />
+            </div>
 
-      <input
-        type="date"
-        name="date"
-        value={journey.date}
-        onChange={handleChange}
-      />
+            <div className="field-grid">
+              <div className="field-group">
+                <label htmlFor="date">
+                  <FaCalendarAlt /> Date
+                </label>
+                <input
+                  id="date"
+                  type="date"
+                  name="date"
+                  value={journey.date}
+                  onChange={handleChange}
+                />
+              </div>
 
-      <input
-        type="time"
-        name="time"
-        value={journey.time}
-        onChange={handleChange}
-      />
+              <div className="field-group">
+                <label htmlFor="time">
+                  <FaClock /> Time
+                </label>
+                <input
+                  id="time"
+                  type="time"
+                  name="time"
+                  value={journey.time}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
-      <br /><br />
+            <button className="predict-btn" type="submit" disabled={loading}>
+              {loading ? (
+                <>
+                  <FaSpinner className="btn-spinner" /> Predicting...
+                </>
+              ) : (
+                <>
+                  <FaArrowRight /> Predict Traffic
+                </>
+              )}
+            </button>
 
-      <button onClick={predictTraffic} disabled={loading}>
-        {loading ? "Predicting..." : "Predict Traffic"}
-      </button>
+            {error && (
+              <div className="feedback error-message">
+                <FaExclamationTriangle /> {error}
+              </div>
+            )}
 
-      {error && (
-        <p style={{ color: "red" }}>
-          {error}
-        </p>
-      )}
-      <div className="prediction-container">
+            {successMessage && (
+              <div className="feedback success-message">
+                <FaCheckCircle /> {successMessage}
+              </div>
+            )}
+          </form>
 
-     <AIDecisionCard result={result} />
-     {
-       result &&  <RecommedationCard traffic={result.traffic} />
-     }      
-
+          <div className="result-column">
+            <AIDecisionCard result={result} />
+          </div>
+        </div>
       </div>
-
-      
-    </div>
+    </section>
   );
 }
 

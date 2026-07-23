@@ -1,53 +1,27 @@
-.planner-container {
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 30px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+* {
+  box-sizing: border-box;
 }
 
-.planner-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
+html {
+  scroll-behavior: smooth;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #0f172a;
+  background: #f8fbff;
 }
 
-label {
-  margin-top: 15px;
-  margin-bottom: 5px;
-  font-weight: bold;
+a {
+  color: inherit;
 }
 
+button,
 input {
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+  font: inherit;
 }
 
-button {
-  margin-top: 25px;
-  padding: 14px;
-  background: #1976d2;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background: #1565c0;
-}
-
-.result{
-  margin-top:30px;
-  padding: 20px;
-  border-radius: 10px;
-  background: #f4f4f4;
+img {
+  max-width: 100%;
 }
